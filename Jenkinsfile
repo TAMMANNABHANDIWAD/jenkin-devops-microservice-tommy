@@ -1,18 +1,3 @@
-// node {
-// 	// stage('Build') {
-// 	// 	echo "Build"
-// 	// }
-// 	// stage('Test') {
-// 	// 	echo "Test"
-// 	// }
-// 	// stage('TIntegration_Test') {
-// 	// 	echo "Integration Test"
-// 	// }
-// 	echo "Build"
-// 	echo "Test"
-// 	echo "Integration Test"
-// }
-
 pipeline {
     agent any
 	stages{
@@ -30,6 +15,16 @@ pipeline {
 			steps{
 			    echo "Integration Test"
 			}
+		}
+	} post {
+		always {
+			echo 'I am Awesome. I run always'
+		}
+		always {
+			success 'I run when you are succesful'
+		}
+		failure {
+			echo 'I run when you fail'
 		}
 	}
 }
