@@ -26,7 +26,7 @@ pipeline {
 				sh " mvn clean compile"
 			}
 		}
-		
+
 		stage('Test'){
 			steps{
 				//echo "Test"
@@ -38,6 +38,32 @@ pipeline {
 			steps{
 			    //echo "Integration Test"
 				sh "mvn failsafe:integration-test failsafe:verify"
+			}
+		}
+
+		stage('Package'){
+			steps{
+			    //echo "Integration Test"
+				sh "mvn package -DskipTests"
+			}
+		}
+
+		stage('Build Docker Image') {
+			steps {
+				 script {
+					 dockerImage = docker.build("tammanna1/currency-exchange-devops:${env.BUILD_TAG}")
+				 }
+			}
+		}
+
+		stage('Push Docker Image') {
+			steps {
+				script {
+					docker.withRegistry('', 'dockerhub'){
+					dockerImage.push();
+					dockerImage.push('latest');
+					}
+				}
 			}
 		}
 	} 
